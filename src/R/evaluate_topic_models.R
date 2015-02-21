@@ -41,6 +41,7 @@ par.ks                <- list(oma=c(0, 0, 0, 0), mai=c(0.50, 0.30, 0.10, 0.05), 
 par.topic.frequencies <- list(oma=c(0, 0, 0, 0), mai=c(0.35, 0.35, 0.10, 0.05), cex=0.6, mgp=c(1.5, 0.5, 0.0))
 par.trends            <- list(oma=c(0, 0, 0, 0), mai=c(0.35, 0.35, 0.10, 0.05), cex=0.6, mgp=c(1.5, 0.5, 0.0))
 
+root.dir <- "../../"
 figures.dir <- "../../out/figures/"
 tables.dir <- "../../out/tables/"
 
@@ -115,7 +116,7 @@ print.topics.and.term <- function(tyc, full.topic.assignments, best) {
 
     imp.terms <- data.frame(terms[,as.numeric(topic.names.old)])
     imp.terms <- data.frame(do.call(paste, c(data.frame(t(imp.terms)), sep=", ")))
-    imp.terms[,2] <- topic.names.old
+    imp.terms[,2] <- topic.names
     imp.terms[,3] <- as.character(topic.freqs[1:selected.k])
     imp.terms[,4] <- 1:nrow(imp.terms)
 
@@ -164,7 +165,7 @@ print.topics.and.term <- function(tyc, full.topic.assignments, best) {
 
     lt <- xtable(imp.terms,
                  label = "tab:topic_terms",
-                 caption = paste("Fifteen most important terms of the top thirty discovered topics"))
+                 caption = paste("Fifty most important terms of the top thirty discovered topics"))
 
     align(lt) <- c("r", "l", "l", "r", "X")
     print(lt,
@@ -176,6 +177,13 @@ print.topics.and.term <- function(tyc, full.topic.assignments, best) {
           tabular.environment="tabularx",
           width="\\textwidth",
           size="footnotesize",
+          sanitize.text.function=function(x){x})
+
+    colnames(imp.terms) <- c("Topic Number", "Topic Label", "Number of Articles", "Fifty Most Relevant Terms")
+    print(xtable(imp.terms),
+          file=paste0(root.dir, "topic_terms.html"),
+          type="html",
+          include.rownames=F,
           sanitize.text.function=function(x){x})
 }
 
